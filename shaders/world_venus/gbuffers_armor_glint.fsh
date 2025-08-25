@@ -1,0 +1,8 @@
+#version 130
+
+#define FRAGMENT_SHADER
+#define NETHER
+#define GBUFFERS_ARMOR_GLINT
+#define WORLD_VENUS
+
+#include "/program/gbuffers_armor_glint.glsl"

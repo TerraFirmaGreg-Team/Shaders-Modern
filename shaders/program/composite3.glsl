@@ -1,6 +1,6 @@
-/////////////////////////////////////
-// Complementary Shaders by EminGT //
-/////////////////////////////////////
+////////////////////////////////////////
+// Complementary Reimagined by EminGT //
+////////////////////////////////////////
 
 //Common//
 #include "/lib/common.glsl"
@@ -14,13 +14,19 @@
     flat in vec3 upVec, sunVec;
 #endif
 
-//Pipeline Constants//
-#if WORLD_BLUR > 0
-    const bool colortex0MipmapEnabled = true;
-#endif
+//Uniforms//
+uniform float far, near;
 
-//Common Variables//
+uniform sampler2D colortex0;
+
 #if WORLD_BLUR > 0
+    uniform float viewWidth, viewHeight, aspectRatio;
+
+    uniform mat4 gbufferProjectionInverse;
+
+    uniform sampler2D depthtex0;
+    uniform sampler2D depthtex1;
+
     #if WORLD_BLUR == 2 && WB_DOF_FOCUS >= 0
         #if WB_DOF_FOCUS == 0
             uniform float centerDepthSmooth;
@@ -28,11 +34,27 @@
             float centerDepthSmooth = (far * (WB_DOF_FOCUS - near)) / (WB_DOF_FOCUS * (far - near));
         #endif
     #endif
+
+    #ifdef WB_FOV_SCALED
+	    uniform mat4 gbufferProjection;
+    #endif
 #endif
 
+#if WORLD_BLUR > 0 && defined BLOOM_FOG_COMPOSITE3
+    uniform int isEyeInWater;
+
+    uniform vec3 cameraPosition;
+#endif
+
+//Pipeline Constants//
 #if WORLD_BLUR > 0
-    float SdotU = dot(sunVec, upVec);
-    float sunFactor = SdotU < 0.0 ? clamp(SdotU + 0.375, 0.0, 0.75) / 0.75 : clamp(SdotU + 0.03125, 0.0, 0.0625) / 0.0625;
+    const bool colortex0MipmapEnabled = true;
+#endif
+
+//Common Variables//
+#if WORLD_BLUR > 0
+	float SdotU = dot(sunVec, upVec);
+	float sunFactor = SdotU < 0.0 ? clamp(SdotU + 0.375, 0.0, 0.75) / 0.75 : clamp(SdotU + 0.03125, 0.0, 0.0625) / 0.0625;
 
     vec2 dofOffsets[18] = vec2[18](
         vec2( 0.0    ,  0.25  ),
@@ -101,7 +123,7 @@
         #endif
 
         if (coc * 0.5 > 1.0 / max(viewWidth, viewHeight)) {
-            for (int i = 0; i < 18; i++) {
+            for(int i = 0; i < 18; i++) {
                 vec2 offset = dofOffsets[i] * coc * 0.0085 * dofScale;
                 float lod = log2(viewHeight * aspectRatio * coc * 0.75 / 320.0);
                 #ifndef WB_CHROMATIC
@@ -131,28 +153,20 @@ void main() {
         float z1 = texelFetch(depthtex1, texelCoord, 0).r;
         float z0 = texelFetch(depthtex0, texelCoord, 0).r;
 
-        vec4 screenPos = vec4(texCoord, z0, 1.0);
-        vec4 viewPos = gbufferProjectionInverse * (screenPos * 2.0 - 1.0);
-        viewPos /= viewPos.w;
-        float lViewPos = length(viewPos.xyz);
+        vec4 screenPos0 = vec4(texCoord, z0, 1.0);
+        vec4 viewPos0 = gbufferProjectionInverse * (screenPos0 * 2.0 - 1.0);
+        viewPos0 /= viewPos0.w;
+        float lViewPos0 = length(viewPos0.xyz);
 
-        #if defined DISTANT_HORIZONS && defined NETHER
-            float z0DH = texelFetch(dhDepthTex, texelCoord, 0).r;
-            vec4 screenPosDH = vec4(texCoord, z0DH, 1.0);
-            vec4 viewPosDH = dhProjectionInverse * (screenPosDH * 2.0 - 1.0);
-            viewPosDH /= viewPosDH.w;
-            lViewPos = min(lViewPos, length(viewPosDH.xyz));
-        #endif
-
-        DoWorldBlur(color, z1, lViewPos);
+        DoWorldBlur(color, z1, lViewPos0);
 
         #ifdef BLOOM_FOG_COMPOSITE3
-            color *= GetBloomFog(lViewPos); // Reminder: Bloom Fog can move between composite1-2-3
+            color *= GetBloomFog(lViewPos0); // Reminder: Bloom Fog can move between composite1-2-3
         #endif
     #endif
 
-    /* DRAWBUFFERS:0 */
-    gl_FragData[0] = vec4(color, 1.0);
+	/* DRAWBUFFERS:0 */
+	gl_FragData[0] = vec4(color, 1.0);
 }
 
 #endif
@@ -166,6 +180,8 @@ void main() {
     flat out vec3 upVec, sunVec;
 #endif
 
+//Uniforms//
+
 //Attributes//
 
 //Common Variables//
@@ -176,10 +192,10 @@ void main() {
 
 //Program//
 void main() {
-    gl_Position = ftransform();
-
+	gl_Position = ftransform();
+    
     #if WORLD_BLUR > 0
-        texCoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
+	    texCoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
         upVec = normalize(gbufferModelView[1].xyz);
         sunVec = GetSunVector();
     #endif
