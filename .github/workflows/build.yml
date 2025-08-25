@@ -6,7 +6,7 @@ on:
       - dev
       - main
     paths:
-      # - 'shaders/**'
+      - 'shaders/**'
       - 'pakku.json'
 
 concurrency:
