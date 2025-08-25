@@ -5,9 +5,9 @@ on:
     branches:
       - dev
       - main
-    paths:
-      - 'shaders/**'
-      - 'pakku.json'
+    # paths:
+    #   - 'shaders/**'
+    #   - 'pakku.json'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
