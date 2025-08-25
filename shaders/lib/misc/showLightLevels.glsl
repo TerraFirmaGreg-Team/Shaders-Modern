@@ -9,7 +9,7 @@ if (NdotU > 0.99) {
         #if MC_VERSION < 11800
             float lxMin = 0.533334;
         #else
-            float lxMin = 0.034; // Quite high minimum value because of an Iris/Sodium issue
+            float lxMin = 0.000001;
         #endif
             float lyMin = 0.533334;
     #else

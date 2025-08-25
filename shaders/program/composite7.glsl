@@ -1,6 +1,6 @@
-/////////////////////////////////////
-// Complementary Shaders by EminGT //
-/////////////////////////////////////
+////////////////////////////////////////
+// Complementary Reimagined by EminGT //
+////////////////////////////////////////
 
 //Common//
 #include "/lib/common.glsl"
@@ -10,30 +10,44 @@
 
 noperspective in vec2 texCoord;
 
+//Uniforms//
+uniform float viewWidth, viewHeight;
+
+#ifndef LIGHT_COLORING
+    uniform sampler2D colortex3;
+#else
+    uniform sampler2D colortex8;
+#endif
+
 //Pipeline Constants//
 
 //Common Variables//
 
 //Common Functions//
-float GetLinearDepth(float depth) {
-    return (2.0 * near) / (far + near - depth * (far - near));
-}
 
 //Includes//
-#if FXAA_DEFINE == 1
-    #include "/lib/antialiasing/fxaa.glsl"
+#ifdef FXAA
+	#include "/lib/antialiasing/fxaa.glsl"
 #endif
 
 //Program//
 void main() {
-    vec3 color = texelFetch(colortex3, texelCoord, 0).rgb;
-        
-    #if FXAA_DEFINE == 1
-        FXAA311(color);
+    #ifndef LIGHT_COLORING
+        vec3 color = texelFetch(colortex3, texelCoord, 0).rgb;
+    #else
+        vec3 color = texelFetch(colortex8, texelCoord, 0).rgb;
     #endif
 
+	#ifdef FXAA
+		FXAA311(color);
+	#endif
+
+    #ifndef LIGHT_COLORING
     /* DRAWBUFFERS:3 */
-    gl_FragData[0] = vec4(color, 1.0);
+    #else
+    /* DRAWBUFFERS:8 */
+    #endif
+	gl_FragData[0] = vec4(color, 1.0);
 }
 
 #endif
@@ -42,6 +56,8 @@ void main() {
 #ifdef VERTEX_SHADER
 
 noperspective out vec2 texCoord;
+
+//Uniforms//
 
 //Attributes//
 
@@ -53,9 +69,9 @@ noperspective out vec2 texCoord;
 
 //Program//
 void main() {
-    gl_Position = ftransform();
+	gl_Position = ftransform();
 
-    texCoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
+	texCoord = (gl_TextureMatrix[0] * gl_MultiTexCoord0).xy;
 }
 
 #endif
