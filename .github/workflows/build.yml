@@ -1,0 +1,263 @@
+name: Project Build
+run-name: "📦 Project Build #${{ github.run_number }}"
+on:
+  push:
+    branches:
+      - dev
+      - main
+    paths:
+      - 'shaders/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DEV_ENVIRONMENT: ${{ github.ref_name != 'main' }}
+
+jobs:    
+  info:
+    name: 🖥️ Project Info
+    runs-on: ubuntu-latest
+    if: ${{  github.repository_owner == 'TerraFirmaGreg-Team' }}
+    outputs:
+      project_version: ${{ steps.check.outputs.project_version }}
+      project_name: ${{ steps.check.outputs.project_name }}
+      release_type: ${{ steps.check.outputs.release_type }}
+      exists: ${{ steps.check.outputs.exists }}
+      make_release: ${{ steps.check.outputs.make_release }}
+
+    steps:
+        - name: 📦 Checkout
+          uses: actions/checkout@v5.0.0
+          with:
+            fetch-depth: 0
+            ref: ${{ github.ref }}
+
+        - name: 📥 Get Pakku Info
+          id: pakku_info
+          uses: ActionsTools/read-json-action@v1.0.5
+          with:
+            file_path: "pakku.json"
+
+        - name: 📝 Increment Semantic Version
+          id: increment
+          uses: christian-draeger/increment-semantic-version@1.2.3
+          with:
+            current-version: ${{ steps.pakku_info.outputs.version }}
+            version-fragment: 'patch'
+
+        - name: 🔍 Check if tag exists
+          uses: mukunku/tag-exists-action@v1.6.0
+          id: check_tag
+          with:
+            tag: ${{ steps.increment.outputs.next-version }}
+
+        - name: 📝 Sync release version.
+          uses: tj-actions/sync-release-version@v13.16
+          with:
+            pattern: '"version": "'
+            current_version: ${{ steps.pakku_info.outputs.version }}
+            new_version: ${{ steps.increment.outputs.next-version }}
+            paths: |
+              pakku.json
+
+        - name: 📝 Push changes
+          uses: EndBug/add-and-commit@v9.1.4
+          with:
+            committer_name: GitHub Actions
+            committer_email: actions@github.com
+            add: 'pakku.json'
+            message: 'Bump version to ${{ steps.increment.outputs.next-version }}'
+
+        - name: 🔍 Check
+          id: check
+          shell: bash
+          run: |  
+            echo "project_version=${{ steps.increment.outputs.next-version }}" >> $GITHUB_OUTPUT
+
+            echo "project_name=${{ steps.pakku_info.outputs.name }}" >> $GITHUB_OUTPUT
+            echo "release_type=${{ steps.pakku_info.outputs.release_type }}" >> $GITHUB_OUTPUT
+            echo "exists=${{ steps.check_tag.outputs.exists }}" >> $GITHUB_OUTPUT
+            echo "make_release=${{ steps.check_tag.outputs.exists == 'false' && env.DEV_ENVIRONMENT == 'false' }}" >> $GITHUB_OUTPUT
+
+        - name: 📝 Generate Github Summary
+          uses: WcAServices/markdown-template-action@v1.1.1
+          with:
+            template: |
+              📃 **Name**: ${{ steps.check.outputs.project_name }}
+              📃 **Release**:  `${{ steps.check.outputs.project_version }}`
+              📃 **Release Type**: `${{ steps.check.outputs.release_type }}`
+
+              📃 **Dev Environment**: `${{ env.DEV_ENVIRONMENT }}`
+              📃 **Tag Exists**: `${{ steps.check.outputs.exists }}`
+              📃 **Make Release**: `${{ steps.check.outputs.make_release }}`
+            
+
+  build-project:
+    name: 📦 Build Project
+    needs: [info]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+      
+      - name: 📁 Preparing the artifact Unbound
+        run: |
+          mkdir -p build/unbound
+          cp -r shaders/ build/unbound/
+          cd build/unbound
+          sed -i 's/#define SHADER_STYLE .* \/\/\[1 4\]/#define SHADER_STYLE 1 \/\/\[1 4\]/g' shaders/lib/common.glsl
+          zip -r ${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}.zip shaders/
+          
+      - name: 🚀 Upload artifact Unbound
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: ${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}
+          path: ./build/unbound/${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}.zip
+          if-no-files-found: error
+
+      - name: 📁 Preparing the artifact Reimagined
+        run: |
+          mkdir -p build/reimagined
+          cp -r shaders/ build/reimagined/
+          cd build/reimagined
+          sed -i 's/#define SHADER_STYLE .* \/\/\[1 4\]/#define SHADER_STYLE 4 \/\/\[1 4\]/g' shaders/lib/common.glsl
+          zip -r ${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}.zip shaders/
+          
+      - name: 🚀 Upload artifact Reimagined
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: ${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}
+          path: ./build/reimagined/${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}.zip
+          if-no-files-found: error
+
+  release-github:
+    name: 🚀 Release to GitHub
+    needs: [info, build-project]
+    runs-on: ubuntu-latest
+    if: ${{ needs.info.outputs.make_release == 'true' }}
+    outputs:
+      url: ${{ steps.release.outputs.url }}
+
+    steps:
+      - name: 📦 Checkout
+        uses: actions/checkout@v5.0.0
+
+      - name: 📦 Download artifact
+        uses: actions/download-artifact@v5.0.0
+        with:
+          merge-multiple: true
+
+      - name: 🔍 Check if artifact exist
+        id: check_artifact
+        shell: bash
+        run: |
+          if [ ! -f ${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}.zip ]; then
+            echo '::error::No value found for artifact `Reimagined.zip`.' && exit 1
+          fi
+          if [ ! -f ${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}.zip ]; then
+            echo '::error::No value found for artifact `Unbound.zip`.' && exit 1
+          fi
+          echo "✔️ All artifacts found"
+
+
+      - name: 🚀 Create release
+        id: release
+        uses: softprops/action-gh-release@v2.3.2
+        with:
+          name: ${{ needs.info.outputs.project_version }}
+          tag_name: ${{ needs.info.outputs.project_version }}
+          target_commitish: ${{ github.ref_name }}
+          files: |
+            ${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}.zip
+            ${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}.zip
+          prerelease: ${{ needs.info.outputs.release_type != 'release' }}
+          generate_release_notes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  release-platforms:
+    name: 🚀 Release to Platforms
+    needs: [info, build-project, release-github]
+    runs-on: ubuntu-latest
+    if: ${{ needs.info.outputs.make_release == 'true' }}
+
+    steps:
+      - name: 🔒 Check if TOKEN exist
+        shell: bash
+        run: |
+          if [ "${{ secrets.CURSEFORGE_TOKEN }}" == '' ]; then
+            echo '::error::No value found for secret key `CURSEFORGE_TOKEN`. See https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository' && exit 1
+          fi
+          if [ "${{ secrets.MODRINTH_TOKEN }}" == '' ]; then
+            echo '::error::No value found for secret key `MODRINTH_TOKEN`. See https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository' && exit 1
+          fi  
+
+      - name: 📦 Download artifact
+        uses: actions/download-artifact@v5.0.0
+        with:
+          merge-multiple: true
+
+      - name: 🔍 Check if artifact exist
+        id: check_artifact
+        shell: bash
+        run: |
+          if [ ! -f ${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}.zip ]; then
+            echo '::error::No value found for artifact `Reimagined.zip`.' && exit 1
+          fi
+          if [ ! -f ${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}.zip ]; then
+            echo '::error::No value found for artifact `Unbound.zip`.' && exit 1
+          fi
+          echo "✔️ All artifacts found"
+
+      - name: 🚀 Upload Reimagined to platforms
+        uses: Kir-Antipov/mc-publish@v3.3.0
+        with:
+          modrinth-id: ${{ vars.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          curseforge-id: ${{ vars.CURSEFORGE_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          loaders: |
+            Iris
+            OptiFine
+
+          game-versions: |
+            1.12.2
+            1.20.1
+
+          files: ${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}.zip
+          name: "${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}"
+          version: ${{ needs.info.outputs.project_version }}
+          version-type: ${{ needs.info.outputs.release_type }}
+          game-version-filter: none
+          retry-attempts: 2
+          retry-delay: 10000
+          fail-mode: fail
+
+      - name: 🚀 Upload Unbound to platforms
+        uses: Kir-Antipov/mc-publish@v3.3.0
+        with:
+          modrinth-id: ${{ vars.MODRINTH_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+
+          curseforge-id: ${{ vars.CURSEFORGE_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          loaders: |
+            Iris
+            OptiFine
+
+          game-versions: |
+            1.12.2
+            1.20.1
+
+          files: ${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}.zip
+          name: "${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}"
+          version: ${{ needs.info.outputs.project_version }}
+          version-type: ${{ needs.info.outputs.release_type }}
+          game-version-filter: none
+          retry-attempts: 2
+          retry-delay: 10000
+          fail-mode: fail
