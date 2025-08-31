@@ -10,6 +10,10 @@
 
     #define HAS_NO_ATMOSPHERE
 
+    // Align lighting/shadows with visible sun path on Ad Astra worlds
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
+
     // Disable Unbound's procedural sun/moon, keep vanilla sun/moon on both presets
     #define DISABLE_UNBOUND_MOON
     #define DISABLE_UNBOUND_SUN_MOON
@@ -45,6 +49,10 @@
     #define DISABLE_UNBOUND_SUN_MOON
     // Allow vanilla sun glare on Glacio
 
+    // Align lighting/shadows with visible sun path
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
+
     // Force Unbound to use Reimagined skybox style (always use vanilla sun/moon)
     #undef  SUN_MOON_STYLE_DEFINE
     #define SUN_MOON_STYLE_DEFINE 1
@@ -61,6 +69,10 @@
     #define DISABLE_UNBOUND_MOON
     #define DISABLE_UNBOUND_SUN_MOON
     // Allow vanilla sun glare and bloom on Moon
+
+    // Align lighting/shadows with visible sun path
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
 
     // Allow original preset choice, but disable procedural sun/moon
     // #undef  SUN_MOON_STYLE_DEFINE
@@ -88,6 +100,10 @@
     #define DISABLE_UNBOUND_SUN_MOON
     // Allow vanilla sun glare on Mercury
 
+    // Align lighting/shadows with visible sun path
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
+
     // Allow original preset choice, but disable procedural sun/moon
     // #undef  SUN_MOON_STYLE_DEFINE
     // #define SUN_MOON_STYLE_DEFINE 1
@@ -104,6 +120,10 @@
     #define DISABLE_UNBOUND_MOON
     #define DISABLE_UNBOUND_SUN_MOON
     // Allow vanilla sun glare and bloom on Mars
+
+    // Align lighting/shadows with visible sun path
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
     
     // Allow original preset choice, but disable procedural sun/moon
     // #undef  SUN_MOON_STYLE_DEFINE
