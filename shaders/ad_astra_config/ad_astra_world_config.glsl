@@ -10,25 +10,22 @@
 
     #define HAS_NO_ATMOSPHERE
 
-    // In Unbound only, prevent shader from modifying vanilla sun/moon sprite
-    #if SUN_MOON_STYLE >= 2
-        #define UNLIT_SKY_OBJECTS
-    #endif
+    // Align lighting/shadows with visible sun path on Ad Astra worlds
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
 
-    // Unbound preset should not render its own moon here
+    // Disable Unbound's procedural sun/moon, keep vanilla sun/moon on both presets
     #define DISABLE_UNBOUND_MOON
     #define DISABLE_UNBOUND_SUN_MOON
-    #define DISABLE_SKY_GLARE
+    // Allow vanilla sun glare in Orbit
 
-    // Force Unbound to use Reimagined skybox style
-    #undef  SUN_MOON_STYLE_DEFINE
-    #define SUN_MOON_STYLE_DEFINE 1
-    // Use vanilla intensity; avoid shader brightening/halo (Unbound only)
-    #if SUN_MOON_STYLE >= 2
-        #define UNLIT_SKY_OBJECTS
-    #endif
-    #undef  LENSFLARE
-    #undef  BLOOM_FOG
+    // Allow original preset choice, but disable procedural sun/moon
+    // #undef  SUN_MOON_STYLE_DEFINE
+    // #define SUN_MOON_STYLE_DEFINE 1
+    
+    // Keep all bloom and lens flare effects for sun
+    // #undef  LENSFLARE
+    // #undef  BLOOM_FOG
 
     // change stars.glsl and nightNebula.glsl to not disappear or break below the horizon
     #define HORIZON_WRAPAROUND
@@ -46,15 +43,17 @@
 #ifdef WORLD_GLACIO
     #define HAS_NO_MOON
     #define STARS_AT_DAY
-    #if SUN_MOON_STYLE >= 2
-        #define UNLIT_SKY_OBJECTS
-    #endif
-    // Hide Unbound procedural moon on Glacio
+    
+    // Disable Unbound's procedural sun/moon, keep vanilla sun/moon on both presets
     #define DISABLE_UNBOUND_MOON
     #define DISABLE_UNBOUND_SUN_MOON
-    #define DISABLE_SKY_GLARE
+    // Allow vanilla sun glare on Glacio
 
-    // Force Unbound to use Reimagined skybox style
+    // Align lighting/shadows with visible sun path
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
+
+    // Force Unbound to use Reimagined skybox style (always use vanilla sun/moon)
     #undef  SUN_MOON_STYLE_DEFINE
     #define SUN_MOON_STYLE_DEFINE 1
     #undef  LENSFLARE
@@ -65,15 +64,23 @@
     #define NEBULA_AT_DAY
     #define STARS_AT_DAY
     #define HAS_NO_ATMOSPHERE
-    // Hide Unbound procedural moon on the Moon
+    
+    // Disable Unbound's procedural sun/moon, keep vanilla sun/moon on both presets
     #define DISABLE_UNBOUND_MOON
     #define DISABLE_UNBOUND_SUN_MOON
-    #define DISABLE_SKY_GLARE
+    // Allow vanilla sun glare and bloom on Moon
 
-    // Force Unbound to use Reimagined skybox style
-    #if SUN_MOON_STYLE >= 2
-        #define UNLIT_SKY_OBJECTS
-    #endif
+    // Align lighting/shadows with visible sun path
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
+
+    // Allow original preset choice, but disable procedural sun/moon
+    // #undef  SUN_MOON_STYLE_DEFINE
+    // #define SUN_MOON_STYLE_DEFINE 1
+
+    // Keep all bloom and lens flare effects for sun
+    // #undef  LENSFLARE
+    // #undef  BLOOM_FOG
 
     #undef  ATM_FOG_MULT
     #define ATM_FOG_MULT 0.0
@@ -87,38 +94,46 @@
     #define HAS_NO_MOON
     #define NEBULA_AT_DAY
     #define STARS_AT_DAY
-    // Mercury has no moon — disable Unbound moon
+    
+    // Disable Unbound's procedural sun/moon, keep vanilla sun/moon on both presets
     #define DISABLE_UNBOUND_MOON
     #define DISABLE_UNBOUND_SUN_MOON
-    #define DISABLE_SKY_GLARE
+    // Allow vanilla sun glare on Mercury
 
-    // Force Unbound to use Reimagined skybox style
-    #undef  SUN_MOON_STYLE_DEFINE
-    #define SUN_MOON_STYLE_DEFINE 1
-    #if SUN_MOON_STYLE >= 2
-        #define UNLIT_SKY_OBJECTS
-    #endif
-    #undef  LENSFLARE
-    #undef  BLOOM_FOG
+    // Align lighting/shadows with visible sun path
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
+
+    // Allow original preset choice, but disable procedural sun/moon
+    // #undef  SUN_MOON_STYLE_DEFINE
+    // #define SUN_MOON_STYLE_DEFINE 1
+    
+    // Keep all bloom and lens flare effects for sun
+    // #undef  LENSFLARE
+    // #undef  BLOOM_FOG
 #endif
 
 #ifdef WORLD_MARS
     #define HAS_NO_MOON
 
+    // Disable Unbound's procedural sun/moon, keep vanilla sun/moon on both presets
     #define DISABLE_UNBOUND_MOON
     #define DISABLE_UNBOUND_SUN_MOON
-    // Allow Ad Astra skybox/moons
+    // Allow vanilla sun glare and bloom on Mars
+
+    // Align lighting/shadows with visible sun path
+    #undef  SUN_ANGLE
+    #define SUN_ANGLE 0
     
-    // Force Unbound to use Reimagined skybox style
-    #undef  SUN_MOON_STYLE_DEFINE
-    #define SUN_MOON_STYLE_DEFINE 1
-    #if SUN_MOON_STYLE >= 2
-        #define UNLIT_SKY_OBJECTS
-    #endif
-    #undef  LENSFLARE
-    #undef  BLOOM_FOG
+    // Allow original preset choice, but disable procedural sun/moon
+    // #undef  SUN_MOON_STYLE_DEFINE
+    // #define SUN_MOON_STYLE_DEFINE 1
+    
+    // Keep all bloom and lens flare effects for sun
+    // #undef  LENSFLARE
+    // #undef  BLOOM_FOG
     #undef  ATM_FOG_MULT
-    #define ATM_FOG_MULT 0.1
+    #define ATM_FOG_MULT 0.0
     #undef  LIGHTSHAFTS_ACTIVE
     #define LIGHTSHAFTS_ACTIVE 1
     #undef  LIGHTSHAFT_BEHAVIOUR
