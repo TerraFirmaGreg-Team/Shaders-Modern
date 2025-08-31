@@ -54,8 +54,10 @@
         if (isEyeInWater == 1)
             finalSky = mix(finalSky * 3.0, waterFogColor, VdotUmax0M);
 
-        // Sun/Moon Glare (Reimagined only)
-        #if SUN_MOON_STYLE < 2
+        // Sun/Moon Glare
+        // Keep glare (hence bloom) for Reimagined (SUN_MOON_STYLE < 2).
+        // Suppress only when Unbound procedural sun/moon is disabled on Ad Astra worlds.
+        #if !(defined(DISABLE_UNBOUND_SUN_MOON) && (SUN_MOON_STYLE >= 2))
         if (doGlare) {
             if (0.0 < VdotSML) {
                 float glareScatter = 4.0 * (2.0 - clamp01(VdotS * 1000.0));
@@ -115,8 +117,8 @@
         if (isEyeInWater == 1)
             finalSky = mix(finalSky, waterFogColor, VdotUmax0M);
 
-        // Sun/Moon Glare (Reimagined only)
-        #if SUN_MOON_STYLE < 2
+        // Sun/Moon Glare
+        #if !(defined(DISABLE_UNBOUND_SUN_MOON) && (SUN_MOON_STYLE >= 2))
         finalSky *= 1.0 + mix(nightFactor, 0.5 + 0.7 * noonFactor, VdotS * 0.5 + 0.5) * pow2(pow2(pow2(VdotS)));
         #endif
 

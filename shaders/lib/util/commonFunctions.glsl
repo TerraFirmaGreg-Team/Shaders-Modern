@@ -8,7 +8,15 @@
         #ifdef OVERWORLD
             float ang = fract(timeAngle - 0.25);
             ang = (ang + (cos(ang * 3.14159265358979) * -0.5 + 0.5 - ang) / 3.0) * 6.28318530717959;
-            return normalize((gbufferModelView * vec4(vec3(-sin(ang), cos(ang) * sunRotationData) * 2000.0, 1.0)).xyz);
+
+            #if defined(DISABLE_UNBOUND_SUN_MOON)
+                // On Ad Astra worlds, align lighting/shadows with vanilla/Reimagined sun path
+                // regardless of global SUN_ANGLE by forcing zero path rotation here.
+                const vec2 sunRotationDataAA = vec2(1.0, 0.0); // cos(0), -sin(0)
+                return normalize((gbufferModelView * vec4(vec3(-sin(ang), cos(ang) * sunRotationDataAA) * 2000.0, 1.0)).xyz);
+            #else
+                return normalize((gbufferModelView * vec4(vec3(-sin(ang), cos(ang) * sunRotationData) * 2000.0, 1.0)).xyz);
+            #endif
         #elif defined END
             float ang = 0.0;
             return normalize((gbufferModelView * vec4(vec3(0.0, sunRotationData * 2000.0), 1.0)).xyz);

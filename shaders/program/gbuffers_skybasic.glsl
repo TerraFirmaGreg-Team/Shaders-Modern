@@ -93,6 +93,7 @@ void main() {
         color.rgb += GetStars(starCoord, VdotU, VdotS);
 
         #if SUN_MOON_STYLE >= 2 && !defined(DISABLE_UNBOUND_SUN_MOON)
+        #ifndef DISABLE_UNBOUND_SUN_MOON
             float absVdotS = abs(VdotS);
             #if SUN_MOON_STYLE == 2
                 float sunSizeFactor1 = 0.9975;
@@ -163,6 +164,7 @@ void main() {
                 }
             }
         #endif
+        #endif // DISABLE_UNBOUND_SUN_MOON
     #endif
 
     color.rgb *= 1.0 - maxBlindnessDarkness;
