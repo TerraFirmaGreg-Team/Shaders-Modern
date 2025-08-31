@@ -98,6 +98,7 @@ void main() {
         } else { // Custom Sky
             #if MC_VERSION >= 11300
                 // Preserve Ad Astra planets (like Earth) without excessive darkening
+                // This vector controls the colour of celestial objects
                 color.rgb *= vec3(1.5, 1.5, 1.2);
             #else
                 discard;
