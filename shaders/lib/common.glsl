@@ -11,7 +11,7 @@
 ---------------------------------------------------------------------*/
 
 //User Settings//
-    #define SHADER_STYLE 4 //[1 4]
+    #define SHADER_STYLE 1 //[1 4]
 
     #define RP_MODE 1 //[1 0 3 2]
 
