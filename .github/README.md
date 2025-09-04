@@ -1,6 +1,19 @@
-# Shaders-Complementary
+<div align="center">
+<h1>TerraFirmaGreg-Shaders:</h1>
+  
+<a>The perfect look for top-level survival</a>
 
-**TerraFirmaGreg-Shaders:** The perfect look for top-level survival
+<a href="https://github.com/TerraFirmaGreg-Team/Modpack-Modern">
+    <img src="https://github.com/TerraFirmaGreg-Team/.github/blob/main/branding/icon/v3/tfg_logo_shader_1080p.png?raw=true" alt="Logo" height="120"/>
+  </a>
+  </br>
+  <a href="https://discord.gg/AEaCzCTUwQ">
+    <img src="https://github.com/TerraFirmaGreg-Team/.github/blob/main/branding/button/brands/discord_logo_32x.png?raw=true" alt="Join our Discord" height="50"/>
+  </a>
+  </br>
+  </br>
+  <h2>Shaders - Complementary</h2>
+</div>
 
 A specially modified fork of Complementary, which transforms the complex and harsh world of the TerraFirmaGreg-Modpack into a visual delight. Enjoy amazing graphics without compromising the beautiful atmosphere!
 
