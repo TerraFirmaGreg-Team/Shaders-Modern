@@ -1,14 +1,20 @@
 <div align="center">
-<h1>TerraFirmaGreg-Shaders:</h1>
+  <h1>TerraFirmaGreg - Shaders</h1>
   
-<a>The perfect look for top-level survival</a>
+  <a>The perfect look for top-level survival</a>
 
-<a href="https://github.com/TerraFirmaGreg-Team/Modpack-Modern">
+  <a href="https://github.com/TerraFirmaGreg-Team/Shaders-Complementary">
     <img src="https://github.com/TerraFirmaGreg-Team/.github/blob/main/branding/icon/v3/tfg_logo_shader_1080p.png?raw=true" alt="Logo" height="120"/>
   </a>
   </br>
   <a href="https://discord.gg/AEaCzCTUwQ">
     <img src="https://github.com/TerraFirmaGreg-Team/.github/blob/main/branding/button/brands/discord_logo_32x.png?raw=true" alt="Join our Discord" height="50"/>
+  </a>
+  <a href="https://www.curseforge.com/minecraft/shaders/terrafirmagreg-shaders">
+    <img src="https://github.com/TerraFirmaGreg-Team/.github/blob/main/branding/button/brands/curseforge_logo_32x.png?raw=true" alt="Available on CurseForge" height="50"/>
+  </a>
+  <a href="https://modrinth.com/shader/terrafirmagreg-shaders">
+    <img src="https://github.com/TerraFirmaGreg-Team/.github/blob/main/branding/button/brands/modrinth_logo_32x.png?raw=true" alt="Available on Modrinth" height="50"/>
   </a>
   </br>
   </br>
