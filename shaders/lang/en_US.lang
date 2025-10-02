@@ -23,9 +23,9 @@ option.info1=How to get more performance
 value.info1.0=
 option.info1.comment=Performance is a complex topic in Minecraft because it gets affected by so many things, but you can try these:. Reduce your render distance, ideally it should be between 6 and 16 for almost every device. Reduce the "Profile" shader setting, these have been carefully tested for the best visual/performance ratio. More information will be added later.
 
-option.info2=What are the best settings
+option.info2=Love to TaidumCraft's team
 value.info2.0=
-option.info2.comment=Best settings are subjective, but using the default settings will be the near-best for most people. The default settings have been shaped by years of community evaluations and feedback, while paying a lot of attention to the visual/performance ratio. But you should still feel free to tweak around and have fun doing so!
+option.info2.comment=This shader pack is based on the works of TaidumCraft's team, without them this would have been impossible. Rest in peace Jax
 
 option.info3=What is Profile or Visual Style
 value.info3.0=
