@@ -30,15 +30,17 @@
     vec3 nightMiddleSkyColor  = nightMid;
     vec3 nightDownSkyColor    = nightDown;
 #elif defined(WORLD_MARS)
-    const vec3 dayUp    = vec3(0.12, 0.07, 0.04);
-    const vec3 dayMid   = vec3(0.10, 0.06, 0.03);
-    const vec3 dayDown  = vec3(0.08, 0.05, 0.02);
+    // Mars sky colors - original Taidum values for proper brightness
+    const vec3 dayUp    = vec3(0.90, 0.67, 0.52);
+    const vec3 dayMid   = vec3(0.94, 0.61, 0.38);
+    const vec3 dayDown  = vec3(0.99, 0.77, 0.62);
 
-    const vec3 nightUp  = vec3(0.008, 0.008, 0.008);
-    const vec3 nightMid = vec3(0.006, 0.006, 0.006);
-    const vec3 nightDown= vec3(0.004, 0.004, 0.004);
+    // Prevent extremely low values that break DH rendering
+    const vec3 nightUp  = vec3(0.038, 0.038, 0.044);
+    const vec3 nightMid = vec3(0.034, 0.034, 0.040);
+    const vec3 nightDown= vec3(0.031, 0.031, 0.037);
 
-    vec3 sunsetDownSkyColorP  = dayDown;
+    vec3 sunsetDownSkyColorP  = vec3(0.22, 0.69, 0.95);
 
     vec3 dayUpSkyColor        = dayUp;
     vec3 dayMiddleSkyColor    = dayMid;

@@ -93,27 +93,27 @@
     vec3 ambientColor = mix(clearAmbientColor, rainAmbientColor, rainFactor);
 #elif defined(WORLD_MARS)
     #ifndef COMPOSITE
-	    vec3 noonClearLightColor = vec3(0.45, 0.20, 0.08) * 1.2;
+	    vec3 noonClearLightColor = vec3(0.55, 0.45, 0.4) * 1.0; // Reduced brightness
     #else
-        vec3 noonClearLightColor = vec3(0.4, 0.18, 0.06);
+        vec3 noonClearLightColor = vec3(0.5, 0.40, 0.38) * 0.85; // Reduced brightness
     #endif
-    vec3 noonClearAmbientColor = pow(skyColor, vec3(0.65)) * 0.85;
+    vec3 noonClearAmbientColor = pow(skyColor, vec3(0.65)) * 0.75; // Slightly dimmer ambient
 
     #ifndef COMPOSITE
-	    vec3 sunsetClearLightColor = pow(vec3(0.35, 0.30, 0.35), vec3(1.5 + invNoonFactor)) * 1.5;
+	    vec3 sunsetClearLightColor = pow(vec3(0.43, 0.71, 0.85), vec3(1.5 + invNoonFactor)) * 3.0; // Slightly dimmer sunset
     #else
-        vec3 sunsetClearLightColor = pow(vec3(0.25, 0.25, 0.30), vec3(1.5 + invNoonFactor)) * 3.8;
+        vec3 sunsetClearLightColor = pow(vec3(0.39, 0.67, 0.81), vec3(1.5 + invNoonFactor)) * 4.0; // Slightly dimmer sunset
     #endif
-    vec3 sunsetClearAmbientColor   = noonClearAmbientColor * vec3(0.75, 0.65, 0.65) * 0.65;
+    vec3 sunsetClearAmbientColor   = vec3(0.22, 0.69, 0.95) * 0.95; // Slightly dimmer ambient
 
     #if !defined COMPOSITE && !defined DEFERRED1
-        vec3 nightClearLightColor = vec3(0.02, 0.02, 0.02) * (0.2 + vsBrightness * 0.2);
+        vec3 nightClearLightColor = vec3(0.14, 0.12, 0.10) * (0.45 + vsBrightness * 0.35);
     #elif defined DEFERRED1
-        vec3 nightClearLightColor = vec3(0.015, 0.015, 0.015);
+        vec3 nightClearLightColor = vec3(0.12, 0.11, 0.09);
     #else
-        vec3 nightClearLightColor = vec3(0.02, 0.02, 0.02);
+        vec3 nightClearLightColor = vec3(0.14, 0.12, 0.10);
     #endif
-    vec3 nightClearAmbientColor   = vec3(0.008, 0.008, 0.008) * (0.8 + vsBrightness * 0.4);
+    vec3 nightClearAmbientColor   = vec3(0.07, 0.06, 0.05) * (1.15 + vsBrightness * 0.55);
 
     vec3 dayRainLightColor   = vec3(0.18, 0.12, 0.08) * 0.85;
     vec3 dayRainAmbientColor = vec3(0.15, 0.12, 0.18) * 2.3;
