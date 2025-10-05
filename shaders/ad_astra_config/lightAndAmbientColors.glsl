@@ -93,9 +93,9 @@
     vec3 ambientColor = mix(clearAmbientColor, rainAmbientColor, rainFactor);
 #elif defined(WORLD_MARS)
     #ifndef COMPOSITE
-	    vec3 noonClearLightColor = vec3(0.45, 0.20, 0.08) * 1.0; // Reduced brightness
+	    vec3 noonClearLightColor = vec3(0.55, 0.45, 0.4) * 1.0; // Reduced brightness
     #else
-        vec3 noonClearLightColor = vec3(0.4, 0.18, 0.06) * 0.85; // Reduced brightness
+        vec3 noonClearLightColor = vec3(0.5, 0.40, 0.38) * 0.85; // Reduced brightness
     #endif
     vec3 noonClearAmbientColor = pow(skyColor, vec3(0.65)) * 0.75; // Slightly dimmer ambient
 
@@ -107,13 +107,13 @@
     vec3 sunsetClearAmbientColor   = noonClearAmbientColor * vec3(0.75, 0.65, 0.65) * 0.6; // Slightly dimmer ambient
 
     #if !defined COMPOSITE && !defined DEFERRED1
-        vec3 nightClearLightColor = vec3(0.05, 0.04, 0.04) * (0.4 + vsBrightness * 0.3);
+        vec3 nightClearLightColor = vec3(0.14, 0.12, 0.10) * (0.45 + vsBrightness * 0.35);
     #elif defined DEFERRED1
-        vec3 nightClearLightColor = vec3(0.04, 0.03, 0.03);
+        vec3 nightClearLightColor = vec3(0.12, 0.11, 0.09);
     #else
-        vec3 nightClearLightColor = vec3(0.05, 0.04, 0.04);
+        vec3 nightClearLightColor = vec3(0.14, 0.12, 0.10);
     #endif
-    vec3 nightClearAmbientColor   = vec3(0.02, 0.018, 0.016) * (0.8 + vsBrightness * 0.4);
+    vec3 nightClearAmbientColor   = vec3(0.07, 0.06, 0.05) * (1.15 + vsBrightness * 0.55);
 
     vec3 dayRainLightColor   = vec3(0.18, 0.12, 0.08) * 0.85;
     vec3 dayRainAmbientColor = vec3(0.15, 0.12, 0.18) * 2.3;
