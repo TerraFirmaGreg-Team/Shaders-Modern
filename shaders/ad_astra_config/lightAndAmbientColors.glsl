@@ -100,11 +100,11 @@
     vec3 noonClearAmbientColor = pow(skyColor, vec3(0.65)) * 0.75; // Slightly dimmer ambient
 
     #ifndef COMPOSITE
-	    vec3 sunsetClearLightColor = pow(vec3(0.43, 0.71, 0.85), vec3(1.5 + invNoonFactor)) * 3.0; // Slightly dimmer sunset
+	    vec3 sunsetClearLightColor = pow(vec3(0.35, 0.30, 0.35), vec3(1.5 + invNoonFactor)) * 1.3; // Slightly dimmer sunset
     #else
-        vec3 sunsetClearLightColor = pow(vec3(0.39, 0.67, 0.81), vec3(1.5 + invNoonFactor)) * 4.0; // Slightly dimmer sunset
+        vec3 sunsetClearLightColor = pow(vec3(0.25, 0.25, 0.30), vec3(1.5 + invNoonFactor)) * 3.2; // Slightly dimmer sunset
     #endif
-    vec3 sunsetClearAmbientColor   = vec3(0.22, 0.69, 0.95) * 0.95; // Slightly dimmer ambient
+    vec3 sunsetClearAmbientColor   = noonClearAmbientColor * vec3(0.75, 0.65, 0.65) * 0.6; // Slightly dimmer ambient
 
     #if !defined COMPOSITE && !defined DEFERRED1
         vec3 nightClearLightColor = vec3(0.14, 0.12, 0.10) * (0.45 + vsBrightness * 0.35);
