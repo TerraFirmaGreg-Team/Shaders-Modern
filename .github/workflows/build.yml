@@ -30,7 +30,7 @@ jobs:
 
     steps:
         - name: 📦 Checkout
-          uses: actions/checkout@v5.0.0
+          uses: actions/checkout@v6.0.0
           with:
             fetch-depth: 0
             ref: ${{ github.ref }}
@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
       
       - name: 📁 Preparing the artifact Unbound
         run: |
@@ -143,7 +143,7 @@ jobs:
 
     steps:
       - name: 📦 Checkout
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.0
 
       - name: 📦 Download artifact
         uses: actions/download-artifact@v6.0.0
@@ -165,7 +165,7 @@ jobs:
 
       - name: 🚀 Create release
         id: release
-        uses: softprops/action-gh-release@v2.4.2
+        uses: softprops/action-gh-release@v2.5.0
         with:
           name: ${{ needs.info.outputs.project_version }}
           tag_name: ${{ needs.info.outputs.project_version }}
