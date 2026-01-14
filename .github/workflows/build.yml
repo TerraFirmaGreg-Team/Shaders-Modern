@@ -30,7 +30,7 @@ jobs:
 
     steps:
         - name: 📦 Checkout
-          uses: actions/checkout@v5.0.0
+          uses: actions/checkout@v6.0.1
           with:
             fetch-depth: 0
             ref: ${{ github.ref }}
@@ -49,7 +49,7 @@ jobs:
             version-fragment: 'patch'
 
         - name: 🔍 Check if tag exists
-          uses: mukunku/tag-exists-action@v1.6.0
+          uses: mukunku/tag-exists-action@v1.7.0
           id: check_tag
           with:
             tag: ${{ steps.increment.outputs.next-version }}
@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
       
       - name: 📁 Preparing the artifact Unbound
         run: |
@@ -112,7 +112,7 @@ jobs:
           zip -r ${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}.zip shaders/
           
       - name: 🚀 Upload artifact Unbound
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: ${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}
           path: ./build/unbound/${{ needs.info.outputs.project_name }}-Unbound-${{ needs.info.outputs.project_version }}.zip
@@ -127,7 +127,7 @@ jobs:
           zip -r ${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}.zip shaders/
           
       - name: 🚀 Upload artifact Reimagined
-        uses: actions/upload-artifact@v5.0.0
+        uses: actions/upload-artifact@v6.0.0
         with:
           name: ${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}
           path: ./build/reimagined/${{ needs.info.outputs.project_name }}-Reimagined-${{ needs.info.outputs.project_version }}.zip
@@ -143,10 +143,10 @@ jobs:
 
     steps:
       - name: 📦 Checkout
-        uses: actions/checkout@v5.0.0
+        uses: actions/checkout@v6.0.1
 
       - name: 📦 Download artifact
-        uses: actions/download-artifact@v6.0.0
+        uses: actions/download-artifact@v7.0.0
         with:
           merge-multiple: true
 
@@ -165,7 +165,7 @@ jobs:
 
       - name: 🚀 Create release
         id: release
-        uses: softprops/action-gh-release@v2.4.2
+        uses: softprops/action-gh-release@v2.5.0
         with:
           name: ${{ needs.info.outputs.project_version }}
           tag_name: ${{ needs.info.outputs.project_version }}
@@ -195,7 +195,7 @@ jobs:
           fi  
 
       - name: 📦 Download artifact
-        uses: actions/download-artifact@v6.0.0
+        uses: actions/download-artifact@v7.0.0
         with:
           merge-multiple: true
 
