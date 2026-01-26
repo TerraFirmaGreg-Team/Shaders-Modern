@@ -30,7 +30,7 @@ jobs:
 
     steps:
         - name: 📦 Checkout
-          uses: actions/checkout@v6.0.1
+          uses: actions/checkout@v6.0.2
           with:
             fetch-depth: 0
             ref: ${{ github.ref }}
@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
       
       - name: 📁 Preparing the artifact Unbound
         run: |
@@ -143,7 +143,7 @@ jobs:
 
     steps:
       - name: 📦 Checkout
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v6.0.2
 
       - name: 📦 Download artifact
         uses: actions/download-artifact@v7.0.0
