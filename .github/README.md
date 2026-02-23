@@ -4,7 +4,7 @@
   <a>The perfect look for top-level survival</a>
 
   <a href="https://github.com/TerraFirmaGreg-Team/Shaders-Complementary">
-    <img src="https://github.com/TerraFirmaGreg-Team/.github/blob/main/branding/icon/v3/tfg_logo_shader_1080p.png?raw=true" alt="Logo" height="120"/>
+    <img src="https://github.com/TerraFirmaGreg-Team/.github/blob/main/branding/icon/v3/1080p_logo_shader.png?raw=true" alt="Logo" height="120"/>
   </a>
   </br>
   <a href="https://discord.gg/AEaCzCTUwQ">
